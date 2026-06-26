@@ -1,7 +1,7 @@
 #ifndef MATRIZ_H
 #define MATRIZ_H
 
-#define MAX 3
+#define MAX 4
 
 typedef struct {
     int linhas;

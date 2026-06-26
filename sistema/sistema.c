@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include "sistema.h"
+#include <math.h>
+
 
 /* EXEMPLO 
 { 2x + y = 4
@@ -53,9 +55,28 @@ void resolverSistema(SistemaLinear *s){
     printf("\n\n");
     Matriz aumentada;
     copiaParaAumentada(*s, &aumentada);
+    printf("Aumentada antes do Gauss:\n");
+    escreverMatriz(&aumentada);
 
     //2 Escalonar
         for(int i = 0; i < aumentada.linhas; i++){
+            int maxLin = i;
+            for(int k = i + 1; k < aumentada.linhas; k++){
+                if(fabs(aumentada.valores[k][i]) > fabs(aumentada.valores[maxLin][i]))
+                    maxLin = k;
+            }
+
+            // troca as linhas se necessário
+            if(maxLin != i){
+                for(int j = 0; j < aumentada.colunas; j++){
+                    double temp = aumentada.valores[i][j];
+                    aumentada.valores[i][j] = aumentada.valores[maxLin][j];
+                    aumentada.valores[maxLin][j] = temp;
+                }
+            }
+            
+            if(fabs(aumentada.valores[i][i]) < ZERO) continue;
+
             for(int k = i + 1; k < aumentada.linhas; k++){
             double fator = aumentada.valores[k][i] / aumentada.valores[i][i]; //oq eu zero/pivo
                 for(int l = i; l < aumentada.colunas; l++){
@@ -72,7 +93,7 @@ void resolverSistema(SistemaLinear *s){
     for(int i = 0; i < aumentada.linhas; i++){
         int soZeros = 1;
         for(int j = 0; j < aumentada.colunas - 1; j++){
-            if(aumentada.valores[i][j] != 0){
+            if(aumentada.valores[i][j] > ZERO || aumentada.valores[i][j] < -ZERO){
                 soZeros = 0;
                 break;
             }
@@ -95,6 +116,15 @@ void resolverSistema(SistemaLinear *s){
             }
             solucao[i] /= aumentada.valores[i][i];
         }
+        printf("Solução do sistema:\n");
+        for(int i = 0; i < s->a.colunas; i++)
+            printf("x%d = %.2f\n", i + 1, solucao[i]);
+    }else if (s->tipo == SI){
+        printf("O sistema é impossível (SI).\n");
+    }else if (s->tipo == SPI){
+        printf("O sistema é possível e indeterminado (SPI).\n");
     }
-
+    
+//Roger, faz o parsing na entrada a lógica do SPI, pra sair a expressão "universal"
+//Vou tocar nas transf. lineares.
 }

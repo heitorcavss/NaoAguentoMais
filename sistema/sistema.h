@@ -1,5 +1,6 @@
 #ifndef SISTEMA_H
 #define SISTEMA_H
+#define ZERO 0.000000001
 
 #include "../matriz/matriz.h"
 
