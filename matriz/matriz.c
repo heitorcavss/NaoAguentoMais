@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <math.h>
-#include "matriz.h"
+#include "../sistema/sistema.h"
 
 void inicializarMatriz(Matriz *m) {
     for (int i = 0; i < m->linhas; i++)
@@ -31,53 +31,89 @@ void multiplicarMatrizes(Matriz *a, Matriz *b, Matriz *c) {
     c->linhas  = a->linhas;
     c->colunas = b->colunas;
     inicializarMatriz(c);
-    for (int i = 0; i < a->linhas; i++)
-        for (int j = 0; j < b->colunas; j++)
-            for (int k = 0; k < a->colunas; k++)
+    for(int i = 0; i < a->linhas; i++)
+        for(int j = 0; j < b->colunas; j++)
+            for(int k = 0; k < a->colunas; k++)
                 c->valores[i][j] += a->valores[i][k] * b->valores[k][j];
 }
 
-double calcularDeterminante(Matriz *m) {
-    double tmp[MAX][MAX];
-    double det = 1.0;
-    int n = m->linhas;
+int escalonarMatriz(Matriz *m){
+    int trocas = 0;
+    int linhaPivo = 0;
+    int colPivo = 0;
 
-    for (int i = 0; i < n; i++)
-        for (int j = 0; j < n; j++)
-            tmp[i][j] = m->valores[i][j];
+    while(linhaPivo < m->linhas && colPivo < m->colunas){
+        //acha o maior elemento da coluna, para evitar problemas de precisão e div por 0
+        int maxLin = linhaPivo;
+        for(int k = linhaPivo + 1; k < m->linhas; k++)
+            if(fabs(m->valores[k][colPivo]) > fabs(m->valores[maxLin][colPivo]))
+                maxLin = k;
 
-    for (int col = 0; col < n; col++) {
-
-        int pivotLin = col;
-        for (int i = col + 1; i < n; i++)
-            if (fabs(tmp[i][col]) > fabs(tmp[pivotLin][col]))
-                pivotLin = i;
-
-        if (pivotLin != col) {
-            for (int j = 0; j < n; j++) {
-                double aux        = tmp[col][j];
-                tmp[col][j]       = tmp[pivotLin][j];
-                tmp[pivotLin][j]  = aux;
-            }
-            det *= -1.0;
+        // anda coluna se o pivo == 0
+        if(fabs(m->valores[maxLin][colPivo]) < ZERO){
+            colPivo++;
+            continue;
         }
 
-        if (fabs(tmp[col][col]) < 1e-12) {
+        //pivoteamento
+        if(maxLin != linhaPivo){
+            for (int j = 0; j < m->colunas; j++){
+                double temp = m->valores[linhaPivo][j];
+                m->valores[linhaPivo][j] = m->valores[maxLin][j];
+                m->valores[maxLin][j] = temp;
+            }
+            trocas++;
+        }
+
+        //escalonamento
+        for(int k = linhaPivo + 1; k < m->linhas; k++){
+            double fator = m->valores[k][colPivo] / m->valores[linhaPivo][colPivo];
+            for (int l = colPivo; l < m->colunas; l++)
+                m->valores[k][l] -= fator * m->valores[linhaPivo][l];
+        }
+
+        linhaPivo++;
+        colPivo++;
+    }
+    return trocas;
+}
+
+double calcularDeterminante(Matriz *m){
+    Matriz cop = *m;
+    int trocas = escalonarMatriz(&cop);
+
+    double det = (trocas % 2 == 0) ? 1.0 : -1.0;
+    for (int i = 0; i < cop.linhas; i++){
+        if (fabs(cop.valores[i][i]) < ZERO){
             m->determinante = 0.0;
             return 0.0;
         }
-
-        det *= tmp[col][col];
-
-        for (int i = col + 1; i < n; i++) {
-            double fator = tmp[i][col] / tmp[col][col];
-            for (int j = col; j < n; j++)
-                tmp[i][j] -= fator * tmp[col][j];
-        }
+        det *= cop.valores[i][i];
     }
 
     m->determinante = det;
     return det;
 }
 
-int calcularPosto(Matriz *m) { return 0; /* TODO */ }
+int contarPivos(Matriz *m){
+    int pivos = 0;
+    for(int i = 0; i < m->linhas; i++){
+        int temPivo = 0;
+        for(int j = 0; j < m->colunas; j++){
+            if(fabs(m->valores[i][j]) > ZERO){ 
+                temPivo = 1;
+                break;
+            }
+        }
+        pivos += temPivo;
+    }
+    return pivos;
+}
+
+int calcularPosto(Matriz *m){ 
+    Matriz cop = *m;
+    escalonarMatriz(&cop);
+    return contarPivos(&cop);
+}
+
+ 

@@ -3,8 +3,10 @@
 
 #include "../matriz/matriz.h"
 
-void verificarInjetividade(Matriz *m);
-void verificarSobrejetividade(Matriz *m);
-void verificarBijetividade(Matriz *m);
+int verificarInjetividade(Matriz *m);
+int verificarSobrejetividade(Matriz *m);
+int verificaBijetividade(Matriz *m);
+void relatorioTransformacao(Matriz *m);
+void lerTransformacao(Matriz *m);
 
 #endif

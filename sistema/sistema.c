@@ -55,35 +55,9 @@ void resolverSistema(SistemaLinear *s){
     printf("\n\n");
     Matriz aumentada;
     copiaParaAumentada(*s, &aumentada);
-    printf("Aumentada antes do Gauss:\n");
-    escreverMatriz(&aumentada);
-
+    
     //2 Escalonar
-        for(int i = 0; i < aumentada.linhas; i++){
-            int maxLin = i;
-            for(int k = i + 1; k < aumentada.linhas; k++){
-                if(fabs(aumentada.valores[k][i]) > fabs(aumentada.valores[maxLin][i]))
-                    maxLin = k;
-            }
-
-            // troca as linhas se necessário
-            if(maxLin != i){
-                for(int j = 0; j < aumentada.colunas; j++){
-                    double temp = aumentada.valores[i][j];
-                    aumentada.valores[i][j] = aumentada.valores[maxLin][j];
-                    aumentada.valores[maxLin][j] = temp;
-                }
-            }
-            
-            if(fabs(aumentada.valores[i][i]) < ZERO) continue;
-
-            for(int k = i + 1; k < aumentada.linhas; k++){
-            double fator = aumentada.valores[k][i] / aumentada.valores[i][i]; //oq eu zero/pivo
-                for(int l = i; l < aumentada.colunas; l++){
-                    aumentada.valores[k][l] -= fator * aumentada.valores[i][l];
-                }
-            }
-        }
+    escalonarMatriz(&aumentada);
     
     printf("Matriz aumentada escalonada:\n");
     escreverMatriz(&aumentada);

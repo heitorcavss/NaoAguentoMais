@@ -9,11 +9,11 @@
     /* ════════════════════════════════════════════════════
     MAIN
     ════════════════════════════════════════════════════ */
-    int main(void) {
-        Matriz A, B, C;
-        int op;
+int main() {
+    Matriz A, B, C;
+    int op;
 
-        do {
+    do {
             printf("\n╔════════════════════════════════════════╗\n");
             printf("║          ALGEBRA LINEAR                ║\n");
             printf("╠════════════════════════════════════════╣\n");
@@ -22,7 +22,7 @@
             printf("║  2 - Exibir Matriz A                   ║\n");
             printf("║  --- Operacoes ---                     ║\n");
             printf("║  3 - Resolucao de Sistema Linear       ║\n");
-            printf("║  4 - Injetividade / Sobrejetividade    ║\n");
+            printf("║  4 - Transformacao Linear              ║\n");
             printf("║  5 - Determinacao de Base              ║\n");
             printf("║  6 - Autovalores e Autovetores         ║\n");
             printf("║  7 - Diagonalizacao de Matriz          ║\n");
@@ -54,7 +54,9 @@
                 }
 
                 case 4:
-                    verificarInjetividade(&A);
+                    Matriz m;
+                    lerTransformacao(&m);
+                    relatorioTransformacao(&m);
                     break;
 
                 case 5:
@@ -89,4 +91,4 @@
         } while (op != 0);
 
         return 0;
-    }
+}
