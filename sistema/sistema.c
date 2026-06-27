@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include "sistema.h"
+#include "../parsing/ler.h"
 #include <math.h>
+#include <ctype.h>
 
 
 /* EXEMPLO 
@@ -9,20 +11,53 @@
 */
 
 void lerSistema(SistemaLinear *s){
-    printf("Digite o numero de linhas: ");
+    char linha[TAM_LINHA];
+
+    printf("Digite o numero de equacoes: ");
     scanf("%d", &s->a.linhas);
-    printf("Digite o numero de colunas: ");
+
+    printf("Digite o numero de variaveis: ");
     scanf("%d", &s->a.colunas);
 
-    printf("Digite os elementos da matriz dos coeficientes (linha a linha):\n");
-    for(int i = 0; i < s->a.linhas; i++){
-        printf("EQUAÇÃO %d: \n", i + 1);
-        for (int j = 0; j < s->a.colunas; j++) {
-            printf("Digite o coeficiente de x%d: ", j + 1);
-            scanf("%lf", &s->a.valores[i][j]);
+    printf("\nInforme uma letra para cada variavel.\n");
+    printf("Exemplo: x, y, z ou a, b, c\n\n");
+
+    for(int i = 0; i < s->a.colunas; i++){
+        char variavel;
+
+        printf("Nome da variavel %d: ", i + 1);
+        scanf(" %c", &variavel);
+
+        if(!isalpha((unsigned char)variavel)){
+            printf("Erro: a variavel precisa ser uma letra.\n");
+            i--;
+            continue;
         }
-        printf("Digite o termo independente: ");
-        scanf("%lf", &s->b[i]);
+
+        if(variavelJaCadastrada(s, variavel, i)){
+            printf("Erro: a variavel '%c' ja foi cadastrada.\n", variavel);
+            i--;
+            continue;
+        }
+
+        s->variaveis[i] = variavel;
+    }
+
+    limparBufferEntrada();
+
+    printf("\nDigite as equacoes.\n");
+    printf("Exemplo: 2x + y - z = 4\n");
+    printf("Tambem aceita: x + y = z + 5\n\n");
+
+    for(int i = 0; i < s->a.linhas; i++){
+        printf("Equacao %d: ", i + 1);
+
+        fgets(linha, sizeof(linha), stdin);
+
+        if(!parseEquacao(linha, s, i)){
+            printf("Digite novamente a equacao %d.\n\n", i + 1);
+            i--;
+        }
     }
 }
 

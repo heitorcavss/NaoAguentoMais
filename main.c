@@ -5,6 +5,7 @@
     #include "base/base.h"
     #include "autovalores/autovalores.h"
     #include "diagonalizacao/diagonalizacao.h"
+    #include "parsing/ler.h"
 
     /* ════════════════════════════════════════════════════
     MAIN

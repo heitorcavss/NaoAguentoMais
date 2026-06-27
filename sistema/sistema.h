@@ -2,6 +2,8 @@
 #define SISTEMA_H
 #include "../matriz/matriz.h"
 
+#define TAM_LINHA 300
+
 typedef enum{
    SI=0,
    SPI,
@@ -11,7 +13,7 @@ typedef enum{
 typedef struct{
    Matriz a;
    double b[MAX];
-   //int nomeDasVAR[MAX]; // 0 = x, 1 = y, 2 = z
+   char variaveis[MAX];
    TipoSistema tipo;
 }SistemaLinear;
 
