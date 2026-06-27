@@ -98,29 +98,24 @@ void resolverSistema(SistemaLinear *s){
     escreverMatriz(&aumentada);
 
     //3 Determinar o tipo do sistema
-    s->tipo = SPD;
-    for(int i = 0; i < aumentada.linhas; i++){
-        int soZeros = 1;
-        for(int j = 0; j < aumentada.colunas - 1; j++){
-            if(aumentada.valores[i][j] > ZERO || aumentada.valores[i][j] < -ZERO){
-                soZeros = 0;
-                break;
-            }
-        }
-        if(soZeros && aumentada.valores[i][aumentada.colunas - 1] != 0){
-            s->tipo = SI; 
-            break;
-        }else if(soZeros && aumentada.valores[i][aumentada.colunas - 1] == 0){
-            s->tipo = SPI; 
-        }
+    int numVariaveis = s->a.colunas;
+    int postoA = calcularPosto(&s->a);
+    int postoAumentada = calcularPosto(&aumentada);
+    
+    if(postoA < postoAumentada){
+        s->tipo = SI; //"tem solução?"
+    }else if(postoA == numVariaveis){
+        s->tipo = SPD; 
+    }else{
+        s->tipo = SPI;
     }
     //4 Resolver o sistema (se possível)
 
     if(s->tipo == SPD){
         double solucao[s->a.colunas];
-        for(int i = aumentada.linhas - 1; i >= 0; i--){
+        for(int i = numVariaveis - 1; i >= 0; i--){
             solucao[i] = aumentada.valores[i][aumentada.colunas - 1];
-            for(int j = i + 1; j < aumentada.colunas - 1; j++){
+            for(int j = i + 1; j < numVariaveis; j++){
                 solucao[i] -= aumentada.valores[i][j] * solucao[j];
             }
             solucao[i] /= aumentada.valores[i][i];

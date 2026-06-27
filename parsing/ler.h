@@ -1,7 +1,7 @@
 #ifndef LER_H
 #define LER_H
 
-#include "sistema.h"
+#include "../sistema/sistema.h"
 
 int indiceVariavel(SistemaLinear *s, char variavel);
 int variavelJaCadastrada(SistemaLinear *s, char variavel, int limite);
