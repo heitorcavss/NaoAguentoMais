@@ -84,7 +84,7 @@ double calcularDeterminante(Matriz *m){
 
     double det = (trocas % 2 == 0) ? 1.0 : -1.0;
     for (int i = 0; i < cop.linhas; i++){
-        if (fabs(cop.valores[i][i]) < ZERO){
+        if(fabs(cop.valores[i][i]) < ZERO){
             m->determinante = 0.0;
             return 0.0;
         }
