@@ -65,12 +65,7 @@ int main() {
                     break;
 
                 case 6:
-                    if (A.linhas != A.colunas) {
-                        printf("Erro: A nao e quadrada (%dx%d).\n",
-                            A.linhas, A.colunas);
-                    } else {
-                        calcularAutovaloresAutovetores(&A);
-                    }
+                    calcularAutovaloresAutovetores(&A);
                     break;
 
                 case 7:
