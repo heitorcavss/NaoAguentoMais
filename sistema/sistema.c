@@ -227,7 +227,7 @@ void resolverSPI(SistemaLinear *s, Matriz *aumentada){
                     printf("%.2lf", fabs(coef));
                 }
 
-                printf("t%d", p + 1);
+                printf("%c", s->variaveis[p + 1]);
                 escreveuAlgo = 1;
             }
         }
@@ -243,7 +243,7 @@ void resolverSPI(SistemaLinear *s, Matriz *aumentada){
     printf("\nOnde ");
 
     for(int p = 0; p < qtdParametros; p++){
-        printf("t%d", p + 1);
+        printf("%c", s->variaveis[p + 1]);
 
         if(p < qtdParametros - 1){
             printf(", ");
