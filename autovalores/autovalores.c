@@ -77,8 +77,6 @@ void calcularAutovetor(Matriz *m, double lambda, double autovetor[2]){
 
     double p = v.valores[0][0];   // 1ª linha [p, q]
     double q = v.valores[0][1];
-    double r = v.valores[1][0];   // 2ª linha [r, s]
-    double s = v.valores[1][1];
 
     if(fabs(p) > ZERO){
         autovetor[0] = -q/p;
