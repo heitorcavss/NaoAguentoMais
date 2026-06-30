@@ -119,14 +119,14 @@ int verificaBijetividade(Matriz *m){
 void relatorioTransformacao(Matriz *m) {
     int posto = calcularPosto(m);
     
-    printf("Relatório da Transformação Linear:\n");
-    printf("Dimensão do núcleo: %d\n", m->colunas - posto);
-    printf("Dimensão da imagem: %d\n", posto);
+    printf("Relatorio da Transformacao Linear:\n");
+    printf("Dimensao do nucleo: %d\n", m->colunas - posto);
+    printf("Dimensao da imagem: %d\n", posto);
     printf("Matriz Associada:\n");
     escreverMatriz(m);
-    printf("Injetiva: %s\n", verificarInjetividade(m) ? "Sim" : "Não");
-    printf("Sobrejetiva: %s\n", verificarSobrejetividade(m) ? "Sim" : "Não");
-    printf("Bijetiva: %s\n", verificaBijetividade(m) ? "Sim" : "Não");
+    printf("Injetiva: %s\n", verificarInjetividade(m) ? "Sim" : "Nao");
+    printf("Sobrejetiva: %s\n", verificarSobrejetividade(m) ? "Sim" : "Nao");
+    printf("Bijetiva: %s\n", verificaBijetividade(m) ? "Sim" : "Nao");
 
 }
 

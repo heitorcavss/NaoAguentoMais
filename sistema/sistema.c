@@ -112,17 +112,16 @@ void resolverSistema(SistemaLinear *s){
     //4 Resolver o sistema (se possível)
 
     if(s->tipo == SPD){
-        double solucao[s->a.colunas];
         for(int i = numVariaveis - 1; i >= 0; i--){
-            solucao[i] = aumentada.valores[i][aumentada.colunas - 1];
+            s->solucao[i] = aumentada.valores[i][aumentada.colunas - 1];
             for(int j = i + 1; j < numVariaveis; j++){
-                solucao[i] -= aumentada.valores[i][j] * solucao[j];
+                s->solucao[i] -= aumentada.valores[i][j] * s->solucao[j];
             }
-            solucao[i] /= aumentada.valores[i][i];
+            s->solucao[i] /= aumentada.valores[i][i];
         }
         printf("Solução do sistema:\n");
         for(int i = 0; i < s->a.colunas; i++)
-            printf("%c = %.2f\n", s->variaveis[i], solucao[i]);
+            printf("%c = %.2f\n", s->variaveis[i], s->solucao[i]);
     }else if (s->tipo == SI){
         printf("O sistema é impossível (SI).\n");
     }else if (s->tipo == SPI){
@@ -137,10 +136,12 @@ void resolverSPI(SistemaLinear *s, Matriz *aumentada){
     int colunaPivo[MAX];
     int ehPivo[MAX] = {0};
 
-    double constante[MAX] = {0};
-    double coefParam[MAX][MAX] = {0};
-
-    int qtdParametros = 0;
+    s->qtdParametrosSPI = 0;
+    for(int i = 0; i < numVariaveis; i++){
+        s->constanteSPI[i] = 0.0;
+        for(int j = 0; j < numVariaveis; j++)
+            s->coefParamSPI[i][j] = 0.0;
+    }
 
     // Inicializa o vetor de colunas pivô
     for(int i = 0; i < MAX; i++){
@@ -161,8 +162,9 @@ void resolverSPI(SistemaLinear *s, Matriz *aumentada){
     // Variáveis sem pivô viram parâmetros livres
     for(int j = 0; j < numVariaveis; j++){
         if(!ehPivo[j]){
-            coefParam[j][qtdParametros] = 1.0;
-            qtdParametros++;
+            s->indiceParametroSPI[s->qtdParametrosSPI] = j;
+            s->coefParamSPI[j][s->qtdParametrosSPI] = 1.0;
+            s->qtdParametrosSPI++;
         }
     }
 
@@ -176,20 +178,20 @@ void resolverSPI(SistemaLinear *s, Matriz *aumentada){
 
         double pivo = aumentada->valores[i][col];
 
-        constante[col] = aumentada->valores[i][numVariaveis];
+        s->constanteSPI[col] = aumentada->valores[i][numVariaveis];
 
         for(int j = col + 1; j < numVariaveis; j++){
-            constante[col] -= aumentada->valores[i][j] * constante[j];
+            s->constanteSPI[col] -= aumentada->valores[i][j] * s->constanteSPI[j];
 
-            for(int p = 0; p < qtdParametros; p++){
-                coefParam[col][p] -= aumentada->valores[i][j] * coefParam[j][p];
+            for(int p = 0; p < s->qtdParametrosSPI; p++){
+                s->coefParamSPI[col][p] -= aumentada->valores[i][j] * s->coefParamSPI[j][p];
             }
         }
 
-        constante[col] /= pivo;
+        s->constanteSPI[col] /= pivo;
 
-        for(int p = 0; p < qtdParametros; p++){
-            coefParam[col][p] /= pivo;
+        for(int p = 0; p < s->qtdParametrosSPI; p++){
+            s->coefParamSPI[col][p] /= pivo;
         }
     }
 
@@ -202,13 +204,13 @@ void resolverSPI(SistemaLinear *s, Matriz *aumentada){
 
         int escreveuAlgo = 0;
 
-        if(fabs(constante[j]) > ZERO){
-            printf("%.2lf", constante[j]);
+        if(fabs(s->constanteSPI[j]) > ZERO){
+            printf("%.2lf", s->constanteSPI[j]);
             escreveuAlgo = 1;
         }
 
-        for(int p = 0; p < qtdParametros; p++){
-            double coef = coefParam[j][p];
+        for(int p = 0; p < s->qtdParametrosSPI; p++){
+            double coef = s->coefParamSPI[j][p];
 
             if(fabs(coef) > ZERO){
                 if(escreveuAlgo){
@@ -227,7 +229,7 @@ void resolverSPI(SistemaLinear *s, Matriz *aumentada){
                     printf("%.2lf", fabs(coef));
                 }
 
-                printf("%c", s->variaveis[p + 1]);
+                printf("%c", s->variaveis[s->indiceParametroSPI[p]]);
                 escreveuAlgo = 1;
             }
         }
@@ -242,10 +244,10 @@ void resolverSPI(SistemaLinear *s, Matriz *aumentada){
     // Exibe os parâmetros usados
     printf("\nOnde ");
 
-    for(int p = 0; p < qtdParametros; p++){
-        printf("%c", s->variaveis[p + 1]);
+    for(int p = 0; p < s->qtdParametrosSPI; p++){
+        printf("%c", s->variaveis[s->indiceParametroSPI[p]]);
 
-        if(p < qtdParametros - 1){
+        if(p < s->qtdParametrosSPI - 1){
             printf(", ");
         }
     }

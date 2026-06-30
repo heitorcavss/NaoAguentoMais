@@ -11,7 +11,7 @@ void diagonalizarMatriz(Matriz *m){
     TipoAutovalor tipo = calcularAutovalores(m, autovalores);
 
     if(tipo == DOIS_AUTOVALORES_DISTINTOS){
-        printf("A matriz é diagonalizavel.\n");
+        printf("A matriz e diagonalizavel.\n");
 
         Matriz D;
         formarMatrizDiagonal(&D, autovalores);

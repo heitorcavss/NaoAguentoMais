@@ -15,6 +15,11 @@ typedef struct{
    double b[MAX];
    char variaveis[MAX];
    TipoSistema tipo;
+   double solucao[MAX];
+   double constanteSPI[MAX];
+   double coefParamSPI[MAX][MAX];
+   int indiceParametroSPI[MAX];
+   int qtdParametrosSPI;
 }SistemaLinear;
 
 void resolverSistema(SistemaLinear *s);
