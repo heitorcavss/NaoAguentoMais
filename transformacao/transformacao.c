@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include "transformacao.h"
+#include "../parsing/ler.h"
+#include <ctype.h>
 
 /*
 1-  Ler dimensao do dominio e contradominio
@@ -14,22 +16,77 @@
 */
 
 void lerTransformacao(Matriz *m) {
+    char variaveis[MAX];
+    char linha[TAM_LINHA];
+
     printf("\n--- Transformacao Linear  T: R^n -> R^m ---\n");
 
-    printf("Sai de R^n  (n = dominio): ");
-    scanf("%d", &m->colunas);     /* n -> COLUNAS */
+    printf("Sai de R^n  (n = dominio, max %d): ", MAX);
+    scanf("%d", &m->colunas);
+
+    if(m->colunas < 1 || m->colunas > MAX){
+        printf("Erro: dimensao do dominio invalida.\n");
+        return;
+    }
 
     printf("Vai para R^m  (m = contradominio, max %d): ", MAX);
-    scanf("%d", &m->linhas);      /* m -> LINHAS  */
+    scanf("%d", &m->linhas);
+
+    if(m->linhas < 1 || m->linhas > MAX){
+        printf("Erro: dimensao do contradominio invalida.\n");
+        return;
+    }
 
     inicializarMatriz(m);
 
-    printf("\nDigite os coeficientes (0 onde a variavel nao aparece):\n");
-    for (int i = 0; i < m->linhas; i++) {
-        printf("Coordenada de saida %d:\n", i + 1);
-        for (int j = 0; j < m->colunas; j++) {
-            printf("  coeficiente da variavel %d: ", j + 1);
-            scanf("%lf", &m->valores[i][j]);
+    printf("\nInforme uma letra para cada variavel do dominio.\n");
+    printf("Exemplo: x, y, z\n\n");
+
+    for(int i = 0; i < m->colunas; i++){
+        char variavel;
+
+        printf("Nome da variavel %d: ", i + 1);
+        scanf(" %c", &variavel);
+
+        if(!isalpha((unsigned char)variavel)){
+            printf("Erro: a variavel precisa ser uma letra.\n");
+            i--;
+            continue;
+        }
+
+        int repetida = 0;
+
+        for(int j = 0; j < i; j++){
+            if(variaveis[j] == variavel){
+                repetida = 1;
+                break;
+            }
+        }
+
+        if(repetida){
+            printf("Erro: a variavel '%c' ja foi cadastrada.\n", variavel);
+            i--;
+            continue;
+        }
+
+        variaveis[i] = variavel;
+    }
+
+    limparBufferEntrada();
+
+    printf("\nDigite cada coordenada da transformacao.\n");
+    printf("Exemplo para T(x,y,z) = (2x + y - z, x + 3z):\n");
+    printf("Coordenada 1: 2x + y - z\n");
+    printf("Coordenada 2: x + 3z\n\n");
+
+    for(int i = 0; i < m->linhas; i++){
+        printf("Coordenada %d: ", i + 1);
+
+        fgets(linha, sizeof(linha), stdin);
+
+        if(!parseExpressaoLinear(linha, variaveis, m->colunas, m->valores[i])){
+            printf("Digite novamente a coordenada %d.\n\n", i + 1);
+            i--;
         }
     }
 }

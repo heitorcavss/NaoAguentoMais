@@ -232,3 +232,118 @@ void lerSistemaPorEquacoes(SistemaLinear *s){
         }
     }
 }
+
+int parseExpressaoLinear(char expr[], char variaveis[], int qtdVariaveis, double coeficientes[]){
+    int i = 0;
+
+    limparQuebraDeLinha(expr);
+    trocarVirgulaPorPonto(expr);
+
+    for(int j = 0; j < qtdVariaveis; j++){
+        coeficientes[j] = 0.0;
+    }
+
+    while(expr[i] != '\0'){
+
+        while(expr[i] == ' ' || expr[i] == '\t'){
+            i++;
+        }
+
+        if(expr[i] == '\0'){
+            break;
+        }
+
+        int sinal = 1;
+
+        if(expr[i] == '+'){
+            sinal = 1;
+            i++;
+        }else if(expr[i] == '-'){
+            sinal = -1;
+            i++;
+        }
+
+        while(expr[i] == ' ' || expr[i] == '\t'){
+            i++;
+        }
+
+        if(expr[i] == '\0'){
+            printf("Erro: sinal sem termo depois.\n");
+            return 0;
+        }
+
+        double coeficiente = 1.0;
+        int temNumero = 0;
+
+        if(isdigit((unsigned char)expr[i]) || expr[i] == '.'){
+            char *fimNumero;
+
+            coeficiente = strtod(&expr[i], &fimNumero);
+
+            if(fimNumero == &expr[i]){
+                printf("Erro ao converter numero.\n");
+                return 0;
+            }
+
+            i = fimNumero - expr;
+            temNumero = 1;
+        }
+
+        while(expr[i] == ' ' || expr[i] == '\t'){
+            i++;
+        }
+
+        if(expr[i] == '*'){
+            if(!temNumero){
+                printf("Erro: operador '*' sem coeficiente antes.\n");
+                return 0;
+            }
+
+            i++;
+
+            while(expr[i] == ' ' || expr[i] == '\t'){
+                i++;
+            }
+        }
+
+        if(isalpha((unsigned char)expr[i])){
+            char variavel = expr[i];
+            int coluna = -1;
+
+            i++;
+
+            for(int j = 0; j < qtdVariaveis; j++){
+                if(variaveis[j] == variavel){
+                    coluna = j;
+                    break;
+                }
+            }
+
+            if(coluna == -1){
+                printf("Erro: variavel '%c' nao foi cadastrada.\n", variavel);
+                return 0;
+            }
+
+            coeficientes[coluna] += sinal * coeficiente;
+
+        }else if(temNumero){
+            printf("Erro: transformacao linear nao deve ter termo constante.\n");
+            return 0;
+
+        }else{
+            printf("Erro de sintaxe perto de '%c'.\n", expr[i]);
+            return 0;
+        }
+
+        while(expr[i] == ' ' || expr[i] == '\t'){
+            i++;
+        }
+
+        if(expr[i] != '\0' && expr[i] != '+' && expr[i] != '-'){
+            printf("Erro de sintaxe perto de '%c'.\n", expr[i]);
+            return 0;
+        }
+    }
+
+    return 1;
+}

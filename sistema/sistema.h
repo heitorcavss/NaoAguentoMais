@@ -21,5 +21,6 @@ void resolverSistema(SistemaLinear *s);
 void lerSistema(SistemaLinear *s);
 void escreveAumentada(SistemaLinear s);
 void copiaParaAumentada(SistemaLinear s, Matriz *aumentada);
+void resolverSPI(SistemaLinear *s, Matriz *aumentada);
 
 #endif

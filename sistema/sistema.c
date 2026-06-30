@@ -122,13 +122,133 @@ void resolverSistema(SistemaLinear *s){
         }
         printf("Solução do sistema:\n");
         for(int i = 0; i < s->a.colunas; i++)
-            printf("x%d = %.2f\n", i + 1, solucao[i]);
+            printf("%c = %.2f\n", s->variaveis[i], solucao[i]);
     }else if (s->tipo == SI){
         printf("O sistema é impossível (SI).\n");
     }else if (s->tipo == SPI){
-        printf("O sistema é possível e indeterminado (SPI).\n");
+        resolverSPI(s, &aumentada);
     }
-    
-//Roger, faz o parsing na entrada a lógica do SPI, pra sair a expressão "universal"
-//Vou tocar nas transf. lineares.
+}
+
+void resolverSPI(SistemaLinear *s, Matriz *aumentada){
+    int numVariaveis = s->a.colunas;
+    int numEquacoes = s->a.linhas;
+
+    int colunaPivo[MAX];
+    int ehPivo[MAX] = {0};
+
+    double constante[MAX] = {0};
+    double coefParam[MAX][MAX] = {0};
+
+    int qtdParametros = 0;
+
+    // Inicializa o vetor de colunas pivô
+    for(int i = 0; i < MAX; i++){
+        colunaPivo[i] = -1;
+    }
+
+    // Identifica as colunas que possuem pivô
+    for(int i = 0; i < numEquacoes; i++){
+        for(int j = 0; j < numVariaveis; j++){
+            if(fabs(aumentada->valores[i][j]) > ZERO){
+                colunaPivo[i] = j;
+                ehPivo[j] = 1;
+                break;
+            }
+        }
+    }
+
+    // Variáveis sem pivô viram parâmetros livres
+    for(int j = 0; j < numVariaveis; j++){
+        if(!ehPivo[j]){
+            coefParam[j][qtdParametros] = 1.0;
+            qtdParametros++;
+        }
+    }
+
+    // Resolve as variáveis dependentes de baixo para cima
+    for(int i = numEquacoes - 1; i >= 0; i--){
+        int col = colunaPivo[i];
+
+        if(col == -1){
+            continue;
+        }
+
+        double pivo = aumentada->valores[i][col];
+
+        constante[col] = aumentada->valores[i][numVariaveis];
+
+        for(int j = col + 1; j < numVariaveis; j++){
+            constante[col] -= aumentada->valores[i][j] * constante[j];
+
+            for(int p = 0; p < qtdParametros; p++){
+                coefParam[col][p] -= aumentada->valores[i][j] * coefParam[j][p];
+            }
+        }
+
+        constante[col] /= pivo;
+
+        for(int p = 0; p < qtdParametros; p++){
+            coefParam[col][p] /= pivo;
+        }
+    }
+
+    // Exibe a solução geral
+    printf("O sistema e possivel e indeterminado (SPI).\n");
+    printf("Solucao geral:\n");
+
+    for(int j = 0; j < numVariaveis; j++){
+        printf("%c = ", s->variaveis[j]);
+
+        int escreveuAlgo = 0;
+
+        if(fabs(constante[j]) > ZERO){
+            printf("%.2lf", constante[j]);
+            escreveuAlgo = 1;
+        }
+
+        for(int p = 0; p < qtdParametros; p++){
+            double coef = coefParam[j][p];
+
+            if(fabs(coef) > ZERO){
+                if(escreveuAlgo){
+                    if(coef > 0){
+                        printf(" + ");
+                    }else{
+                        printf(" - ");
+                    }
+                }else{
+                    if(coef < 0){
+                        printf("-");
+                    }
+                }
+
+                if(fabs(fabs(coef) - 1.0) > ZERO){
+                    printf("%.2lf", fabs(coef));
+                }
+
+                printf("t%d", p + 1);
+                escreveuAlgo = 1;
+            }
+        }
+
+        if(!escreveuAlgo){
+            printf("0");
+        }
+
+        printf("\n");
+    }
+
+    // Exibe os parâmetros usados
+    printf("\nOnde ");
+
+    for(int p = 0; p < qtdParametros; p++){
+        printf("t%d", p + 1);
+
+        if(p < qtdParametros - 1){
+            printf(", ");
+        }
+    }
+
+    printf(" pertencem aos reais.\n");
 }

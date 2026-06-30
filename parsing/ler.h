@@ -8,4 +8,6 @@ int variavelJaCadastrada(SistemaLinear *s, char variavel, int limite);
 void limparBufferEntrada();
 int parseEquacao(char linha[], SistemaLinear *s, int linhaSistema);
 
+int parseExpressaoLinear(char expr[], char variaveis[], int qtdVariaveis, double coeficientes[]);
+
 #endif
