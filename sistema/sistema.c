@@ -243,9 +243,7 @@ void resolverSPI(SistemaLinear *s, Matriz *aumentada){
 
     // Exibe os parâmetros usados
     printf("\nOnde ");
-
-    printf("\nOnde ");
-
+    
     for(int p = 0; p < s->qtdParametrosSPI; p++){
         printf("%c", s->variaveis[s->indiceParametroSPI[p]]);
 
