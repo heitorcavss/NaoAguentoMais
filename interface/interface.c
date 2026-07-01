@@ -2,7 +2,15 @@
 #include <stdlib.h>
 #include "interface.h"
 
+
 //# sao diretivas
+
+void limparBufferEntrada(){
+    int c;
+
+    while((c = getchar()) != '\n' && c != EOF){
+    }
+}
 
 void limparTela(){
 #ifdef _WIN32
@@ -14,7 +22,7 @@ void limparTela(){
 
 void pausar(){
     int c;
-    while ((c = getchar()) != '\n' && c != EOF);  //limpa o stdin
+    limparBufferEntrada(); //limpa o stdin
     printf("\nPressione ENTER para continuar...");
     getchar();                                     //espera enter
 }

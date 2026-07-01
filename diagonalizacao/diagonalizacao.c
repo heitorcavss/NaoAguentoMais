@@ -1,12 +1,11 @@
 #include <stdio.h>
 #include "diagonalizacao.h"
+#include "../parsing/ler.h"
 
 void diagonalizarMatriz(Matriz *m){
     double autovalores[2];
-    m->linhas = 2;
-    m->colunas = 2;
 
-    lerMatriz(m);  
+    lerMatrizPorParsing(m, 2, 2);  
 
     TipoAutovalor tipo = calcularAutovalores(m, autovalores);
 

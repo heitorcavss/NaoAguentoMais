@@ -121,7 +121,7 @@ void resolverSistema(SistemaLinear *s){
         }
         printf("Solução do sistema:\n");
         for(int i = 0; i < s->a.colunas; i++)
-            printf("%c = %.2f\n", s->variaveis[i], s->solucao[i]);
+            escreverResultadoFormatado(stdout, s->variaveis[i], s->solucao[i]);
     }else if (s->tipo == SI){
         printf("O sistema é impossível (SI).\n");
     }else if (s->tipo == SPI){
@@ -245,7 +245,7 @@ void resolverSPI(SistemaLinear *s, Matriz *aumentada){
     printf("\nOnde ");
 
     for(int p = 0; p < s->qtdParametrosSPI; p++){
-        printf("%c", s->variaveis[s->indiceParametroSPI[p]]);
+        escreverResultadoFormatado(stdout, s->variaveis[p], s->solucao[p]);
 
         if(p < s->qtdParametrosSPI - 1){
             printf(", ");
@@ -253,4 +253,38 @@ void resolverSPI(SistemaLinear *s, Matriz *aumentada){
     }
 
     printf(" pertencem aos reais.\n");
+}
+
+static double corrigirZero(double valor) {
+    if (fabs(valor) < ZERO) {
+        return 0.0;
+    }
+
+    return valor;
+}
+
+static int valorEhDecimal(double valor) {
+    valor = corrigirZero(valor);
+
+    return fabs(valor - round(valor)) > ZERO;
+}
+
+void escreverNumeroFormatado(FILE *saida, double valor) {
+    valor = corrigirZero(valor);
+
+    if (valorEhDecimal(valor)) {
+        fprintf(saida, "%.2lf", valor);
+    } else {
+        fprintf(saida, "%.0lf", valor);
+    }
+}
+
+void escreverResultadoFormatado(FILE *saida, char variavel, double valor) {
+    valor = corrigirZero(valor);
+
+    if (valorEhDecimal(valor)) {
+        fprintf(saida, "%c ~= %.2lf\n", variavel, valor);
+    } else {
+        fprintf(saida, "%c = %.0lf\n", variavel, valor);
+    }
 }

@@ -51,7 +51,7 @@ int lerSistemaDeArquivo(SistemaLinear *s, const char *nomeArquivo) {
 void gravarSistema(SistemaLinear *s, FILE *destino) {
     if (s->tipo == SPD) {
         for (int i = 0; i < s->a.colunas; i++)
-            fprintf(destino, "%c = %.2f\n", s->variaveis[i], s->solucao[i]);
+            escreverResultadoFormatado(destino, s->variaveis[i], s->solucao[i]);
     } else if (s->tipo == SI) {
         fprintf(destino, "O sistema e impossivel (SI).\n");
     } else {
@@ -65,7 +65,7 @@ void gravarSistema(SistemaLinear *s, FILE *destino) {
             int escreveuAlgo = 0;
 
             if (fabs(s->constanteSPI[j]) > ZERO) {
-                fprintf(destino, "%.2lf", s->constanteSPI[j]);
+                escreverNumeroFormatado(destino, s->constanteSPI[j]);
                 escreveuAlgo = 1;
             }
 
@@ -84,7 +84,7 @@ void gravarSistema(SistemaLinear *s, FILE *destino) {
                     }
 
                     if (fabs(fabs(coef) - 1.0) > ZERO)
-                        fprintf(destino, "%.2lf", fabs(coef));
+                        escreverNumeroFormatado(destino, fabs(coef));
 
                     fprintf(destino, "%c", s->variaveis[s->indiceParametroSPI[p]]);
                     escreveuAlgo = 1;
@@ -106,6 +106,6 @@ void gravarSistema(SistemaLinear *s, FILE *destino) {
         fprintf(destino, " pertencem aos reais.\n");
     }
 
-    fprintf(destino, "==============================================================\n");
+    fprintf(destino, "\n==============================================================\n");
     fprintf(destino, "\n");
 }

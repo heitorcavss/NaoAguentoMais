@@ -1,1 +1,2 @@
-gcc (Get-ChildItem -Recurse *.c) -o a
+gcc (Get-ChildItem -Recurse *.c) -o a win
+gcc -Wall -Wextra $(find . -name "*.c") -o programa -lm linux

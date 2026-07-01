@@ -1,13 +1,13 @@
 #include <stdio.h>
 #include <math.h>
 #include "autovalores.h"
+#include "../parsing/ler.h"
 
 void calcularAutovaloresAutovetores(Matriz *m){
     double autovalores[2];
     double autovetor[2];
-    m->linhas = 2;
-    m->colunas = 2;
-    lerMatriz(m);
+    
+    lerMatrizPorParsing(m, 2, 2);
 
     TipoAutovalor tipo = calcularAutovalores(m, autovalores);
 

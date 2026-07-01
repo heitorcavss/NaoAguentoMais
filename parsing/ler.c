@@ -3,6 +3,7 @@
 #include <string.h>
 #include <ctype.h>
 #include "ler.h"
+#include "../interface/interface.h"
 
 
 void limparQuebraDeLinha(char str[]){
@@ -18,13 +19,6 @@ void trocarVirgulaPorPonto(char str[]){
         if(str[i] == ','){
             str[i] = '.';
         }
-    }
-}
-
-void limparBufferEntrada(){
-    int c;
-
-    while((c = getchar()) != '\n' && c != EOF){
     }
 }
 
@@ -346,4 +340,113 @@ int parseExpressaoLinear(char expr[], char variaveis[], int qtdVariaveis, double
     }
 
     return 1;
+}
+
+static int ehSeparadorMatriz(char c) {
+    return c == ' ' || c == '\t' || c == '\n' ||
+           c == ',' ||
+           c == '[' || c == ']' ||
+           c == '(' || c == ')' ||
+           c == '{' || c == '}' ||
+           c == '|';
+}
+
+int parseMatrizTexto(char linha[], Matriz *m, int linhasEsperadas, int colunasEsperadas) {
+    char *p = linha;
+    int linhaAtual = 0;
+    int colunaAtual = 0;
+
+    m->linhas = linhasEsperadas;
+    m->colunas = colunasEsperadas;
+    inicializarMatriz(m);
+
+    while (*p != '\0') {
+        while (*p != '\0' && ehSeparadorMatriz(*p)) {
+            p++;
+        }
+
+        if (*p == '\0') {
+            break;
+        }
+
+        if (*p == ';') {
+            if (colunaAtual != colunasEsperadas) {
+                printf("Erro: linha %d deveria ter %d valores.\n",
+                       linhaAtual + 1, colunasEsperadas);
+                return 0;
+            }
+
+            linhaAtual++;
+            colunaAtual = 0;
+            p++;
+            continue;
+        }
+
+        if (colunaAtual == colunasEsperadas) {
+            linhaAtual++;
+            colunaAtual = 0;
+        }
+
+        if (linhaAtual >= linhasEsperadas) {
+            printf("Erro: matriz tem mais linhas do que o esperado.\n");
+            return 0;
+        }
+
+        char *fimNumero;
+        double valor = strtod(p, &fimNumero);
+
+        if (fimNumero == p) {
+            printf("Erro de sintaxe perto de '%c'.\n", *p);
+            return 0;
+        }
+
+        m->valores[linhaAtual][colunaAtual] = valor;
+        colunaAtual++;
+
+        p = fimNumero;
+    }
+
+    if (colunaAtual > 0) {
+        if (colunaAtual != colunasEsperadas) {
+            printf("Erro: linha %d deveria ter %d valores.\n",
+                   linhaAtual + 1, colunasEsperadas);
+            return 0;
+        }
+
+        linhaAtual++;
+    }
+
+    if (linhaAtual != linhasEsperadas) {
+        printf("Erro: matriz deveria ter %d linhas, mas foram lidas %d.\n",
+               linhasEsperadas, linhaAtual);
+        return 0;
+    }
+
+    return 1;
+}
+
+void lerMatrizPorParsing(Matriz *m, int linhas, int colunas) {
+    char linha[TAM_LINHA];
+
+    limparBufferEntrada();
+
+    printf("\nDigite a matriz %dx%d em uma unica linha.\n", linhas, colunas);
+    printf("Exemplos aceitos:\n");
+    printf("1 2; 3 4\n");
+    printf("[[1,2],[3,4]]\n\n");
+
+    while (1) {
+        printf("Matriz: ");
+
+        if (fgets(linha, sizeof(linha), stdin) == NULL) {
+            printf("Erro ao ler matriz.\n");
+            return;
+        }
+
+        if (parseMatrizTexto(linha, m, linhas, colunas)) {
+            break;
+        }
+
+        printf("Digite novamente.\n\n");
+    }
 }

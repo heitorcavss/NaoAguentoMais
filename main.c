@@ -62,8 +62,12 @@ int main() {
                     scanf(" %255s", nomeArq);
                     if (!lerSistemaDeArquivo(&s, nomeArq))
                         break;
-                } else {
+                } else if( origem == 1) {
                     lerSistema(&s);
+                } else {
+                    printf("Opcao invalida!\n");
+                    pausar();
+                    break;
                 }
                 resolverSistema(&s);
                 char resp;
@@ -76,6 +80,10 @@ int main() {
                         fecharArquivoSaida(arq);
                         printf("Resultado foi salvo!\n");
                     }
+                } else if (resp != 'n' || resp == 'N'){
+                    printf("Opcao Invalida!\n");
+                    pausar();
+                    break;
                 }
                 pausar();
                 break;

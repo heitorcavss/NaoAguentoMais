@@ -28,4 +28,7 @@ void escreveAumentada(SistemaLinear s);
 void copiaParaAumentada(SistemaLinear s, Matriz *aumentada);
 void resolverSPI(SistemaLinear *s, Matriz *aumentada);
 
+void escreverNumeroFormatado(FILE *saida, double valor);
+void escreverResultadoFormatado(FILE *saida, char variavel, double valor);
+
 #endif
