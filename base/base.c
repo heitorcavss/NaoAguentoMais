@@ -7,7 +7,7 @@ Base é quando satisfaz duas condições:
 2. N de vetores == dimensão
 */
 
-void lerConjunto(Matriz *m) {
+void lerConjunto(Matriz *m){
     char coord[3] = {'x', 'y', 'z'};
     do{
         printf("Digite a quantidade de vetores do conjunto: ");
@@ -30,7 +30,7 @@ void lerConjunto(Matriz *m) {
 
 }
 
-int ehBase(Matriz *m) { 
+int ehBase(Matriz *m){ 
     int nVetores = m->linhas;
     int dimensao = m->colunas;
     int posto = calcularPosto(m);
@@ -41,7 +41,7 @@ int ehBase(Matriz *m) {
     
 }
 
-void indicarSubconjunto(Matriz *m, int dimensao) {
+void indicarSubconjunto(Matriz *m, int dimensao){
     Matriz n;
     n.linhas = 0;
     n.colunas = dimensao;

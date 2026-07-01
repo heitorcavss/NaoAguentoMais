@@ -2,6 +2,7 @@
 #define ARQUIVOS_H
 #include <stdio.h>
 #include "../sistema/sistema.h"
+#include "../interface/interface.h"
 
 FILE *abrirArquivoSaida(const char *nomeArquivo);
 void fecharArquivoSaida(FILE *f);

@@ -1,15 +1,16 @@
 #include <stdio.h>
 #include "transformacao.h"
 #include "../parsing/ler.h"
+#include "../interface/interface.h"
 #include <ctype.h>
 
 /*
+logica de resolucao de questoes
 1-  Ler dimensao do dominio e contradominio
 2-  Ler matriz associada
 3-  Escalonar a matriz associada
 4-  Contar posto
-5-  nulidades
-6-  verificar comportamento
+5-  verificar comportamento
 
     Deve reponder:
     nucleo, imagem, (injetiva  sobrejetiva bijetiva)
@@ -92,31 +93,26 @@ void lerTransformacao(Matriz *m) {
 }
 
 
-int verificarInjetividade(Matriz *m) {
-    if(calcularPosto(m) == m->colunas){
-        return 1;
-    }
+int verificarInjetividade(Matriz *m){
+    if(calcularPosto(m) == m->colunas) return 1;
+    
     return 0;
 }
 
-int verificarSobrejetividade(Matriz *m) {
-    if(calcularPosto(m) == m->linhas){
-        return 1;
-    }
+int verificarSobrejetividade(Matriz *m){
+    if(calcularPosto(m) == m->linhas) return 1;
+    
     return 0; 
 }
 
 
 int verificaBijetividade(Matriz *m){
-    
     if(verificarInjetividade(m) && verificarSobrejetividade(m)) return 1;
 
     return 0;
-    
-    
 }
 
-void relatorioTransformacao(Matriz *m) {
+void relatorioTransformacao(Matriz *m){
     int posto = calcularPosto(m);
     
     printf("Relatorio da Transformacao Linear:\n");

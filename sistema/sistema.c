@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "sistema.h"
 #include "../parsing/ler.h"
+#include "../interface/interface.h"
 #include <math.h>
 #include <ctype.h>
 
@@ -255,7 +256,7 @@ void resolverSPI(SistemaLinear *s, Matriz *aumentada){
     printf(" pertencem aos reais.\n");
 }
 
-static double corrigirZero(double valor) {
+static double corrigirZero(double valor){
     if (fabs(valor) < ZERO) {
         return 0.0;
     }
@@ -263,13 +264,13 @@ static double corrigirZero(double valor) {
     return valor;
 }
 
-static int valorEhDecimal(double valor) {
+static int valorEhDecimal(double valor){
     valor = corrigirZero(valor);
 
     return fabs(valor - round(valor)) > ZERO;
 }
 
-void escreverNumeroFormatado(FILE *saida, double valor) {
+void escreverNumeroFormatado(FILE *saida, double valor){
     valor = corrigirZero(valor);
 
     if (valorEhDecimal(valor)) {
@@ -279,7 +280,7 @@ void escreverNumeroFormatado(FILE *saida, double valor) {
     }
 }
 
-void escreverResultadoFormatado(FILE *saida, char variavel, double valor) {
+void escreverResultadoFormatado(FILE *saida, char variavel, double valor){
     valor = corrigirZero(valor);
 
     if (valorEhDecimal(valor)) {

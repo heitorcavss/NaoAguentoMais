@@ -13,10 +13,9 @@ typedef struct {
 void inicializarMatriz(Matriz *m);
 void lerMatriz(Matriz *m);
 void escreverMatriz(Matriz *m);
-void multiplicarMatrizes(Matriz *a, Matriz *b, Matriz *c);
 double calcularDeterminante(Matriz *m);
-int calcularPosto(Matriz *m); /* retorna o número de pivôs após escalonamento */
-int escalonarMatriz(Matriz *m); /* retorna número de trocas de linha */
+int calcularPosto(Matriz *m); //retorna posto
+int escalonarMatriz(Matriz *m); //retorna o numero de trocas de linha para calculo do det.
 int contarPivos(Matriz *m);
 int calcularPosto(Matriz *m);
 

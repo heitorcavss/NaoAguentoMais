@@ -15,13 +15,14 @@ void calcularAutovaloresAutovetores(Matriz *m){
 
     if(tipo == SEM_AUTOVALORES_REAL){
         printf("A matriz nao tem autovalores reais (complexos).\n");
-        return;   /* não tem autovetor real pra calcular, encerra aqui */
+        return;   //não tem autovetor real pra calcular, encerra aqui
     }else if(tipo == UM_AUTOVALOR_REPETIDO){
-        /* ===== EXEMPLO PRONTO: um autovalor só ===== */
+        // um autovalor repetido.
         printf("Autovalor (repetido): %.2f\n", autovalores[0]);
         calcularAutovetor(m, autovalores[0], autovetor);
         printf("Autovetor: (%.2f, %.2f)\n\n", autovetor[0], autovetor[1]);
-    }else{   /* DOIS_AUTOVALORES_DISTINTOS */
+    }else{   
+        //dois autovalores diferentes
         for(int i = 0; i < 2; i++){
             printf("Autovalor: %.2f\n", autovalores[i]);
             calcularAutovetor(m, autovalores[i], autovetor);
@@ -41,16 +42,18 @@ TipoAutovalor calcularAutovalores(Matriz *m, double autovalores[2]) {
     double f = -(a + d); // coef do lambda
     double g = (a * d) - (b * c); // termo constante
 
+    //disso sobra uma eq. do segundo grau: lambda^2 + f*lambda + g = 0
+
     double delta = (f*f) - (4 * 1 * g);
 
-    if(delta <-ZERO){
+    if(delta < -ZERO){
         return SEM_AUTOVALORES_REAL;
     }else if(delta < ZERO){
-        autovalores[0] = -f / (2 * 1);
+        autovalores[0] = -f / (2 * 1); //tira raiz lambda 1 e 2
         return UM_AUTOVALOR_REPETIDO;
     }else{
-        autovalores[0] = (-f + sqrt(delta)) / (2 * 1);
-        autovalores[1] = (-f - sqrt(delta)) / (2 * 1);
+        autovalores[0] = (-f + sqrt(delta)) / (2 * 1); //lambda 1 - autovalor
+        autovalores[1] = (-f - sqrt(delta)) / (2 * 1); //lambda 2 - autovalor
         return DOIS_AUTOVALORES_DISTINTOS;
     }
 }

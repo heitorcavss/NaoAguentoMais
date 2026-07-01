@@ -2,14 +2,14 @@
 #include <math.h>
 #include "../sistema/sistema.h"
 
-void inicializarMatriz(Matriz *m) {
+void inicializarMatriz(Matriz *m){
     for (int i = 0; i < m->linhas; i++)
         for (int j = 0; j < m->colunas; j++)
             m->valores[i][j] = 0.0;
     m->determinante = 0.0;
 }
 
-void lerMatriz(Matriz *m) {
+void lerMatriz(Matriz *m){
     printf("Digite os elementos (linha a linha):\n");
     for (int i = 0; i < m->linhas; i++)
         for (int j = 0; j < m->colunas; j++) {
@@ -18,23 +18,13 @@ void lerMatriz(Matriz *m) {
         }
 }
 
-void escreverMatriz(Matriz *m) {
+void escreverMatriz(Matriz *m){
     for (int i = 0; i < m->linhas; i++) {
         printf("|");
         for (int j = 0; j < m->colunas; j++)
             printf(" %8.2lf|", m->valores[i][j]);
         printf("\n");
     }
-}
-
-void multiplicarMatrizes(Matriz *a, Matriz *b, Matriz *c) {
-    c->linhas  = a->linhas;
-    c->colunas = b->colunas;
-    inicializarMatriz(c);
-    for(int i = 0; i < a->linhas; i++)
-        for(int j = 0; j < b->colunas; j++)
-            for(int k = 0; k < a->colunas; k++)
-                c->valores[i][j] += a->valores[i][k] * b->valores[k][j];
 }
 
 int escalonarMatriz(Matriz *m){

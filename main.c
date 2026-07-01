@@ -59,6 +59,7 @@ int main() {
                 if (origem == 2) {
                     char nomeArq[256];
                     printf("Nome do arquivo: ");
+                    limparBufferEntrada(); // Limpa o buffer antes de ler a string
                     scanf(" %255s", nomeArq);
                     if (!lerSistemaDeArquivo(&s, nomeArq))
                         break;

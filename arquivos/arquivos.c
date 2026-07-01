@@ -3,18 +3,18 @@
 #include <math.h>
 #include "../parsing/ler.h"
 
-FILE *abrirArquivoSaida(const char *nomeArquivo) {
+FILE *abrirArquivoSaida(const char *nomeArquivo){
     FILE *f = fopen(nomeArquivo, "a");
     if (!f)
         printf("Erro: nao foi possivel abrir o arquivo '%s'.\n", nomeArquivo);
-    return f;
+    return f; //retorno o endereco
 }
 
-void fecharArquivoSaida(FILE *f) {
+void fecharArquivoSaida(FILE *f){
     fclose(f);
 }
 
-int lerSistemaDeArquivo(SistemaLinear *s, const char *nomeArquivo) {
+int lerSistemaDeArquivo(SistemaLinear *s, const char *nomeArquivo){
     FILE *arquivo = fopen(nomeArquivo, "r");
     if (!arquivo) {
         printf("Erro: nao foi possivel abrir o arquivo '%s'.\n", nomeArquivo);
@@ -25,20 +25,22 @@ int lerSistemaDeArquivo(SistemaLinear *s, const char *nomeArquivo) {
     fscanf(arquivo, "%d", &s->a.colunas);
 
     for (int j = 0; j < s->a.colunas; j++)
-        fscanf(arquivo, " %c", &s->variaveis[j]);
+        fscanf(arquivo, " %c", &s->variaveis[j]); 
 
     int c;
-    while ((c = fgetc(arquivo)) != '\n' && c != EOF);
+    while ((c = fgetc(arquivo)) != '\n' && c != EOF); 
 
     char linha[TAM_LINHA];
     for (int i = 0; i < s->a.linhas; i++) {
         if (!fgets(linha, TAM_LINHA, arquivo)) {
             printf("Erro: linhas insuficientes no arquivo.\n");
+            pausar();
             fclose(arquivo);
             return 0;
         }
         if (!parseEquacao(linha, s, i)) {
             printf("Erro ao interpretar equacao %d do arquivo.\n", i + 1);
+            pausar();
             fclose(arquivo);
             return 0;
         }
@@ -48,42 +50,41 @@ int lerSistemaDeArquivo(SistemaLinear *s, const char *nomeArquivo) {
     return 1;
 }
 
-void gravarSistema(SistemaLinear *s, FILE *destino) {
-    if (s->tipo == SPD) {
-        for (int i = 0; i < s->a.colunas; i++)
+void gravarSistema(SistemaLinear *s, FILE *destino){
+    if(s->tipo == SPD){
+        for(int i = 0; i < s->a.colunas; i++)
             escreverResultadoFormatado(destino, s->variaveis[i], s->solucao[i]);
-    } else if (s->tipo == SI) {
+    }else if(s->tipo == SI){
         fprintf(destino, "O sistema e impossivel (SI).\n");
-    } else {
+    }else{
         int numVariaveis = s->a.colunas;
         fprintf(destino, "O sistema e possivel e indeterminado (SPI).\n");
         fprintf(destino, "Solucao geral:\n");
 
-        for (int j = 0; j < numVariaveis; j++) {
+        for(int j = 0; j < numVariaveis; j++){
             fprintf(destino, "%c = ", s->variaveis[j]);
 
             int escreveuAlgo = 0;
 
-            if (fabs(s->constanteSPI[j]) > ZERO) {
+            if(fabs(s->constanteSPI[j]) > ZERO){
                 escreverNumeroFormatado(destino, s->constanteSPI[j]);
                 escreveuAlgo = 1;
             }
-
-            for (int p = 0; p < s->qtdParametrosSPI; p++) {
+            for(int p = 0; p < s->qtdParametrosSPI; p++){
                 double coef = s->coefParamSPI[j][p];
 
-                if (fabs(coef) > ZERO) {
-                    if (escreveuAlgo) {
-                        if (coef > 0)
+                if(fabs(coef) > ZERO){
+                    if(escreveuAlgo){
+                        if(coef > ZERO)
                             fprintf(destino, " + ");
                         else
                             fprintf(destino, " - ");
-                    } else {
-                        if (coef < 0)
+                    }else{
+                        if(coef < -ZERO)
                             fprintf(destino, "-");
                     }
 
-                    if (fabs(fabs(coef) - 1.0) > ZERO)
+                    if(fabs(fabs(coef) - 1.0) > ZERO)
                         escreverNumeroFormatado(destino, fabs(coef));
 
                     fprintf(destino, "%c", s->variaveis[s->indiceParametroSPI[p]]);
@@ -91,16 +92,16 @@ void gravarSistema(SistemaLinear *s, FILE *destino) {
                 }
             }
 
-            if (!escreveuAlgo)
+            if(!escreveuAlgo)
                 fprintf(destino, "0");
 
             fprintf(destino, "\n");
         }
 
         fprintf(destino, "\nOnde ");
-        for (int p = 0; p < s->qtdParametrosSPI; p++) {
+        for(int p = 0; p < s->qtdParametrosSPI; p++){
             fprintf(destino, "%c", s->variaveis[s->indiceParametroSPI[p]]);
-            if (p < s->qtdParametrosSPI - 1)
+            if(p < s->qtdParametrosSPI - 1)
                 fprintf(destino, ", ");
         }
         fprintf(destino, " pertencem aos reais.\n");
