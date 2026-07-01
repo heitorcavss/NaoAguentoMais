@@ -80,7 +80,7 @@ int main() {
                         fecharArquivoSaida(arq);
                         printf("Resultado foi salvo!\n");
                     }
-                } else if (resp != 'n' || resp == 'N'){
+                } else if (resp != 'n' && resp != 'N'){
                     printf("Opcao Invalida!\n");
                     pausar();
                     break;

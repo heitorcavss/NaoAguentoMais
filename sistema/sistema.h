@@ -1,6 +1,7 @@
 #ifndef SISTEMA_H
 #define SISTEMA_H
 #include "../matriz/matriz.h"
+#include <stdio.h>
 
 #define TAM_LINHA 300
 

@@ -5,7 +5,9 @@
 void diagonalizarMatriz(Matriz *m){
     double autovalores[2];
 
-    lerMatrizPorParsing(m, 2, 2);  
+    if(!lerOperadorR2PorParsing(m)){
+    return;
+    }
 
     TipoAutovalor tipo = calcularAutovalores(m, autovalores);
 
@@ -24,6 +26,8 @@ void diagonalizarMatriz(Matriz *m){
 }
 
 void formarMatrizDiagonal(Matriz *m, double autovalores[2]){
+    m->linhas = 2;
+    m->colunas = 2;
 
     for(int i = 0; i < 2; i++){
         for(int j = 0; j < 2; j++){

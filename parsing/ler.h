@@ -11,7 +11,6 @@ int parseEquacao(char linha[], SistemaLinear *s, int linhaSistema);
 
 int parseExpressaoLinear(char expr[], char variaveis[], int qtdVariaveis, double coeficientes[]);
 
-int parseMatrizTexto(char linha[], Matriz *m, int linhasEsperadas, int colunasEsperadas);
-void lerMatrizPorParsing(Matriz *m, int linhas, int colunas);
+int lerOperadorR2PorParsing(Matriz *m);
 
 #endif

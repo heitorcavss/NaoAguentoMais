@@ -3,5 +3,6 @@
 
 void limparTela(void);
 void pausar(void);
+void limparBufferEntrada();
 
 #endif

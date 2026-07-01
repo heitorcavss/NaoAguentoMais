@@ -21,7 +21,6 @@ void limparTela(){
 }
 
 void pausar(){
-    int c;
     limparBufferEntrada(); //limpa o stdin
     printf("\nPressione ENTER para continuar...");
     getchar();                                     //espera enter

@@ -7,7 +7,9 @@ void calcularAutovaloresAutovetores(Matriz *m){
     double autovalores[2];
     double autovetor[2];
     
-    lerMatrizPorParsing(m, 2, 2);
+    if(!lerOperadorR2PorParsing(m)){
+    return;
+    }
 
     TipoAutovalor tipo = calcularAutovalores(m, autovalores);
 
