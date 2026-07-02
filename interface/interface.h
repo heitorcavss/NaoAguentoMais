@@ -1,8 +1,8 @@
 #ifndef INTERFACE_H
 #define INTERFACE_H
 
-void limparTela(void);
-void pausar(void);
+void limparTela();
+void pausar();
 void limparBufferEntrada();
 
 #endif

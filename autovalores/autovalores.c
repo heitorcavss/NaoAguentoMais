@@ -31,7 +31,7 @@ void calcularAutovaloresAutovetores(Matriz *m){
     }
 }
 
-TipoAutovalor calcularAutovalores(Matriz *m, double autovalores[2]) {
+TipoAutovalor calcularAutovalores(Matriz *m, double autovalores[2]){
 
     //pra n virar bagunça
     double a = m->valores[0][0];   
@@ -58,15 +58,15 @@ TipoAutovalor calcularAutovalores(Matriz *m, double autovalores[2]) {
     }
 }
 
-void montarMatrizLambdaI(Matriz *A, double lambda, Matriz *resultado){
+void montarMatrizLambdaI(Matriz *m, double lambda, Matriz *resultado){
 
-    resultado->linhas  = A->linhas;
-    resultado->colunas = A->colunas;
+    resultado->linhas  = m->linhas;
+    resultado->colunas = m->colunas;
 
-    for(int i = 0; i < A->linhas; i++){
-        for(int j = 0; j < A->colunas; j++){
+    for(int i = 0; i < m->linhas; i++){
+        for(int j = 0; j < m->colunas; j++){
             //copiar valores
-            resultado->valores[i][j] = A->valores[i][j];
+            resultado->valores[i][j] = m->valores[i][j];
 
             if(i == j){
                 //diminui lambda se diagonal

@@ -8,3 +8,13 @@ Onde y, z pertencem aos reais.
 
 ==============================================================
 
+O sistema e possivel e indeterminado (SPI).
+Solucao geral:
+x = 1.67 - 0.33y + 0.67z
+y = y
+z = z
+
+Onde y, z pertencem aos reais.
+
+==============================================================
+
